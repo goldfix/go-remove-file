@@ -14,3 +14,6 @@ Usage of grm:
   -version  Version
   -x        force delete files
 </code></pre>
+
+Thanks to:
+* https://github.com/satori/go.uuid
