@@ -3,10 +3,10 @@ Possible substitute at 'rm' command. Similar functions plus recovery and trash f
 
 <pre><code>
 Usage of grm:
-  -d        path to process
+  -d        move files into recycle
   -e        empty recycle folder
   -f        ignore nonexistent files, never prompt
-  -i        prompt before every removal
+  -i        prompt before every files
   -ls       list files into recycle
   -r        remove contents recursively
   -u        recover list files from recycle

@@ -65,12 +65,12 @@ func main() {
 
 	paramListRecycleFiles := flag.Bool("ls", false, "list files into recycle")
 	paramRecoverFiles := flag.Bool("u", false, "recover list files from recycle")
-	paramDeleteFiles := flag.Bool("d", false, "path to process")
+	paramDeleteFiles := flag.Bool("d", false, "move files into recycle")
 	paramEmptyRecycle := flag.Bool("e", false, "empty recycle folder")
 	paramForceDelete := flag.Bool("x", false, "force delete files")
 
 	paramForce := flag.Bool("f", false, "ignore nonexistent files, never prompt")
-	paramPrompt := flag.Bool("i", false, "prompt before every removal")
+	paramPrompt := flag.Bool("i", false, "prompt before every files")
 	paramRecursive := flag.Bool("r", false, "remove contents recursively")
 	paramVerbose := flag.Bool("v", false, "explain what is being done")
 	paramVersion := flag.Bool("version", false, "Version")
