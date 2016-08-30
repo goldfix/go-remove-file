@@ -228,10 +228,10 @@ func moveFilesFromRecycle(infoDeletedFile []InfoDeletedFile) {
 		if v.toProcess {
 			//RESTORE
 			Info.Printf("Recovered file: %s", filepath.Join(v.pathFile, v.name))
-			//			err := os.Rename(filepath.Join(RECYCLED_FOLDER, v.uuid.String()+"_"+v.name), filepath.Join(v.pathFile, v.name))
-			//			if err != nil {
-			//				errLog(err, debug.Stack())
-			//			}
+			err := os.Rename(filepath.Join(RECYCLED_FOLDER, v.uuid.String()+"_"+v.name), filepath.Join(v.pathFile, v.name))
+			if err != nil {
+				errLog(err, debug.Stack())
+			}
 		}
 	}
 }
@@ -246,10 +246,10 @@ func moveFilesToRecycle(infoDeletedFile []InfoDeletedFile, paramForceDelete bool
 					errLog(err, debug.Stack())
 				}
 			} else {
-				//			err := os.Rename(filepath.Join(v.pathFile, v.name), filepath.Join(RECYCLED_FOLDER, v.uuid.String()+"_"+v.name))
-				//			if err != nil {
-				//				errLog(err, debug.Stack())
-				//			}
+				err := os.Rename(filepath.Join(v.pathFile, v.name), filepath.Join(RECYCLED_FOLDER, v.uuid.String()+"_"+v.name))
+				if err != nil {
+					errLog(err, debug.Stack())
+				}
 			}
 
 		}
