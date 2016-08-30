@@ -2,7 +2,7 @@
 Possible substitute at 'rm' command. Similar functions plus recovery and trash functions.
 
 <pre><code>
-Usage of grm.exe:
+Usage of grm:
   -d        path to process
   -e        empty recycle folder
   -f        ignore nonexistent files, never prompt
