@@ -1,6 +1,7 @@
 # go-remove-file
 Possible substitute at 'rm' command. Similar functions plus recovery and trash functions.
 
+<pre><code>
 Usage of grm.exe:
   -d    path to process
   -e    empty recycle folder
@@ -14,3 +15,4 @@ Usage of grm.exe:
   -version
         Version
   -x    force delete files
+</code></pre>
