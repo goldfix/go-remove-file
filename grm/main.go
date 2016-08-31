@@ -50,7 +50,7 @@ type InfoDeletedFile struct {
 
 const VERSION string = "0.3"
 const SEPARATOR rune = '|'
-const NO_PARAM string = "$!_ND_!$"
+const PATH_LOG_FILE = "./"
 
 var (
 	InfoCmd         *log.Logger
@@ -62,7 +62,7 @@ var (
 )
 
 func main() {
-	initLog(true)
+	initLog(PATH_LOG_FILE)
 	initFolder()
 
 	paramListRecycleFiles := flag.Bool("ls", false, "list files into recycle")

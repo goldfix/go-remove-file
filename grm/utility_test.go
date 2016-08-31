@@ -26,7 +26,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -38,7 +37,7 @@ func Test_initFolder(t *testing.T) {
 }
 
 func Test_emptyRecycle(t *testing.T) {
-	initLog(ioutil.Discard, ioutil.Discard, ioutil.Discard, ioutil.Discard)
+	initLog("")
 	initFolder()
 
 	os.RemoveAll(RECYCLED_FOLDER)

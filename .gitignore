@@ -56,7 +56,7 @@ _testmain.go
 *.test
 *.prof
 
-src/grm/cover.out
-
-src/grm/file.txt
-src/github.com/satori/*
+github.com/satori/*
+grm/cover.out
+grm/cover.out
+grm/file.txt

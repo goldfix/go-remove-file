@@ -27,26 +27,32 @@ package main
 import (
 	"fmt"
 
+	"io/ioutil"
 	"log"
 	"os"
 	"os/user"
 	"path/filepath"
 	"runtime/debug"
 	"strings"
+	"time"
 )
 
-func initLog(logFile bool) {
-	if logFile {
-		fileLog, err := os.OpenFile("file.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+func initLog(logFile string) {
+	InfoCmd = log.New(os.Stdout, "", 0)
+	ErrorCmd = log.New(os.Stdout, "Error: ", 0)
+
+	if logFile != "" {
+		logFile = logFile + "grm_" + time.Now().Format("20060102") + ".log"
+		fileLog, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
 			log.Fatalln("Failed to open log file:", err)
 		}
-		InfoCmd = log.New(fileLog, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
+		InfoFile = log.New(fileLog, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 		ErrorFile = log.New(fileLog, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	} else {
+		InfoFile = log.New(ioutil.Discard, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
+		ErrorFile = log.New(ioutil.Discard, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 	}
-
-	InfoFile = log.New(os.Stdout, "", 0)
-	ErrorCmd = log.New(os.Stdout, "Error: ", 0)
 }
 
 func initFolder() {
