@@ -43,7 +43,7 @@ func initLog(logFile string) {
 
 	if logFile != "" {
 		logFile = logFile + "grm_" + time.Now().Format("20060102") + ".log"
-		fileLog, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		fileLog, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, os.ModePerm)
 		if err != nil {
 			log.Fatalln("Failed to open log file:", err)
 		}
