@@ -13,6 +13,7 @@ Usage of grm:
   -v        explain what is being done
   -version  output version information and exit
   -x        force delete files
+  -t 		destination folder to restore
 </code></pre>
 
 Thanks to:

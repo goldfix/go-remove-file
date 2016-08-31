@@ -48,8 +48,9 @@ type InfoDeletedFile struct {
 	toProcess bool
 }
 
-const VERSION string = "0.1"
+const VERSION string = "0.3"
 const SEPARATOR rune = '|'
+const NO_PARAM string = "$!_ND_!$"
 
 var (
 	InfoCmd         *log.Logger
@@ -75,6 +76,7 @@ func main() {
 	paramRecursive := flag.Bool("r", false, "remove contents recursively")
 	paramVerbose := flag.Bool("v", false, "explain what is being done")
 	paramVersion := flag.Bool("version", false, "output version information and exit")
+	paramPathToRestore := flag.String("t", "", "destination folder to restore")
 	flag.Parse()
 
 	if *paramVersion {
@@ -115,6 +117,7 @@ func main() {
 		infoLog(fmt.Sprintf("Flag Force: %t", *paramForce))
 		infoLog(fmt.Sprintf("Flag Recursive: %t", *paramRecursive))
 		infoLog(fmt.Sprintf("Flag Delete Files: %t", *paramForceDelete))
+		infoLog(fmt.Sprintf("Flag Path destination folder: %t", *paramPathToRestore))
 
 		infoLog(fmt.Sprintf("Flag Version: %t", *paramVersion))
 		infoLog(fmt.Sprintf("Recycle Folder: %s", RECYCLED_FOLDER))
@@ -129,7 +132,7 @@ func main() {
 
 	if *paramRecoverFiles {
 		infoLog(fmt.Sprintf("Recover files: " + pathToProcess))
-		recoverFiles(pathToProcess, *paramPrompt)
+		recoverFiles(pathToProcess, *paramPrompt, *paramPathToRestore)
 		os.Exit(0)
 	}
 
@@ -166,9 +169,9 @@ func deleteFiles(pathToProcess string, recursive bool, listFiles []string, param
 	return listFiles
 }
 
-func recoverFiles(paramRecoverFiles string, paramPrompt bool) {
+func recoverFiles(paramRecoverFiles string, paramPrompt bool, paramPathToRestore string) {
 	infoDeletedFile := getListDeletedFiles(paramRecoverFiles, paramPrompt)
-	moveFilesFromRecycle(infoDeletedFile)
+	moveFilesFromRecycle(infoDeletedFile, paramPathToRestore)
 	var newInfoDeletedFile []InfoDeletedFile
 	for _, v := range infoDeletedFile {
 		if v.toProcess {
@@ -181,6 +184,11 @@ func recoverFiles(paramRecoverFiles string, paramPrompt bool) {
 }
 
 func getFilesFromFolder(folderPath string, matching string, recursive bool, listFiles []string) (resultListFiles []string) {
+
+	if s, err := os.Stat(folderPath); os.IsNotExist(err) || !s.IsDir() {
+		err = errors.New(fmt.Sprintf("Folder is invalid or not exists (%s).", folderPath))
+		errLog(err, nil)
+	}
 
 	tmpListFiles, err := ioutil.ReadDir(folderPath)
 	if err != nil {
@@ -229,12 +237,20 @@ func appendInfoDeletedFile(filesToDelete []string, infoDeletedFile []InfoDeleted
 	return infoDeletedFile
 }
 
-func moveFilesFromRecycle(infoDeletedFile []InfoDeletedFile) {
+func moveFilesFromRecycle(infoDeletedFile []InfoDeletedFile, paramPathToRestore string) {
 	for _, v := range infoDeletedFile {
 		if v.toProcess {
 			//RESTORE
-			infoLog(fmt.Sprintf("Recovered file: %s", filepath.Join(v.pathFile, v.name)))
-			err := os.Rename(filepath.Join(RECYCLED_FOLDER, v.uuid.String()+"_"+v.name), filepath.Join(v.pathFile, v.name))
+			destFolder := v.pathFile
+			if paramPathToRestore != "" {
+				destFolder = paramPathToRestore
+			}
+			infoLog(fmt.Sprintf("Recovered file: %s", filepath.Join(destFolder, v.name)))
+			err := os.MkdirAll(destFolder, os.ModeDir)
+			if err != nil {
+				errLog(err, debug.Stack())
+			}
+			err = os.Rename(filepath.Join(RECYCLED_FOLDER, v.uuid.String()+"_"+v.name), filepath.Join(destFolder, v.name))
 			if err != nil {
 				errLog(err, debug.Stack())
 			}
