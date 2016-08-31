@@ -74,7 +74,7 @@ func main() {
 	paramPrompt := flag.Bool("i", false, "prompt before every files")
 	paramRecursive := flag.Bool("r", false, "remove contents recursively")
 	paramVerbose := flag.Bool("v", false, "explain what is being done")
-	paramVersion := flag.Bool("version", false, "Version")
+	paramVersion := flag.Bool("version", false, "output version information and exit")
 	flag.Parse()
 
 	if *paramVersion {

@@ -11,7 +11,7 @@ Usage of grm:
   -r        remove contents recursively
   -u        recover list files from recycle
   -v        explain what is being done
-  -version  Version
+  -version  output version information and exit
   -x        force delete files
 </code></pre>
 
