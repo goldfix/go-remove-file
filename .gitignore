@@ -57,3 +57,5 @@ _testmain.go
 *.prof
 
 src/grm/cover.out
+
+src/grm/file.txt

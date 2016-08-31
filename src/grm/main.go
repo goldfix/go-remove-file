@@ -28,6 +28,7 @@ package main
 import (
 	"errors"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -51,16 +52,16 @@ const VERSION string = "0.1"
 const SEPARATOR rune = '|'
 
 var (
-	Trace           *log.Logger
-	Info            *log.Logger
-	Warning         *log.Logger
-	Error           *log.Logger
+	InfoCmd         *log.Logger
+	InfoFile        *log.Logger
+	ErrorCmd        *log.Logger
+	ErrorFile       *log.Logger
 	RECYCLED_FILEDB string
 	RECYCLED_FOLDER string
 )
 
 func main() {
-	initLog(os.Stdout, os.Stdout, os.Stdout, os.Stderr)
+	initLog(true)
 	initFolder()
 
 	paramListRecycleFiles := flag.Bool("ls", false, "list files into recycle")
@@ -77,11 +78,14 @@ func main() {
 	flag.Parse()
 
 	if *paramVersion {
-		Info.Printf("Version: %s", VERSION)
+		infoLog(fmt.Sprintf("Version: %s", VERSION))
 		os.Exit(0)
 	}
 
 	if *paramEmptyRecycle {
+		if !askForConfirmation("", false) {
+			return
+		}
 		emptyRecycle()
 		os.Exit(0)
 	}
@@ -93,59 +97,61 @@ func main() {
 
 	pathToProcess := ""
 	if (len(flag.Args()) != 1 || flag.Arg(0) == "") && (*paramDeleteFiles || *paramListRecycleFiles || *paramRecoverFiles) {
-		err := errors.New("missing or wrong operand")
+		err := errors.New("Missing or wrong operand")
 		errLog(err, nil)
 	} else {
 		pathToProcess = flag.Arg(0)
 	}
 
 	if *paramVerbose {
-		Info.Printf("Path to Process: %s", pathToProcess)
-		Info.Printf("Param List Files: %t", *paramListRecycleFiles)
-		Info.Printf("Param Recovery Files: %t", *paramRecoverFiles)
-		Info.Printf("Param Path to Delete: %t", *paramDeleteFiles)
-		Info.Printf("Empty Recycle: %t", *paramEmptyRecycle)
+		infoLog(fmt.Sprintf("Path to Process: %s", pathToProcess))
+		infoLog(fmt.Sprintf("Flag List Files: %t", *paramListRecycleFiles))
+		infoLog(fmt.Sprintf("Flag Recovery Files: %t", *paramRecoverFiles))
+		infoLog(fmt.Sprintf("Flag Path to Delete: %t", *paramDeleteFiles))
+		infoLog(fmt.Sprintf("Flag Empty Recycle: %t", *paramEmptyRecycle))
 
-		Info.Printf("Param Prompt: %t", *paramPrompt)
-		Info.Printf("Param Verbose: %t", *paramVerbose)
-		Info.Printf("Param Force: %t", *paramForce)
-		Info.Printf("Param Recursive: %t", *paramRecursive)
-		Info.Printf("Force Delete Files: %t", *paramForceDelete)
+		infoLog(fmt.Sprintf("Flag Prompt: %t", *paramPrompt))
+		infoLog(fmt.Sprintf("Flag Verbose: %t", *paramVerbose))
+		infoLog(fmt.Sprintf("Flag Force: %t", *paramForce))
+		infoLog(fmt.Sprintf("Flag Recursive: %t", *paramRecursive))
+		infoLog(fmt.Sprintf("Flag Delete Files: %t", *paramForceDelete))
 
-		Info.Printf("Param Version: %t", *paramVersion)
-		Info.Printf("Recycle Folder: %s", RECYCLED_FOLDER)
-		Info.Printf("Recycle FileDb: %s", RECYCLED_FILEDB)
+		infoLog(fmt.Sprintf("Flag Version: %t", *paramVersion))
+		infoLog(fmt.Sprintf("Recycle Folder: %s", RECYCLED_FOLDER))
+		infoLog(fmt.Sprintf("Recycle FileDb: %s", RECYCLED_FILEDB))
 	}
 
 	if *paramListRecycleFiles {
-		Info.Println("List files: " + pathToProcess)
+		infoLog(fmt.Sprintf("List files: " + pathToProcess))
 		getListDeletedFiles(pathToProcess, false)
 		os.Exit(0)
 	}
 
 	if *paramRecoverFiles {
-		Info.Println("Recover files: " + pathToProcess)
+		infoLog(fmt.Sprintf("Recover files: " + pathToProcess))
 		recoverFiles(pathToProcess, *paramPrompt)
 		os.Exit(0)
 	}
 
 	if *paramDeleteFiles {
-		Info.Println("Delete files: " + pathToProcess)
+		infoLog(fmt.Sprintf("Delete files: %s", pathToProcess))
 		var filesToDelete []string
-		filesToDelete = deleteFiles(pathToProcess, *paramRecursive, filesToDelete, *paramPrompt, *paramForceDelete)
+		filesToDelete = deleteFiles(pathToProcess, *paramRecursive, filesToDelete, *paramPrompt, *paramForceDelete, *paramVerbose)
 		os.Exit(0)
 	}
 }
 
-func deleteFiles(pathToProcess string, recursive bool, listFiles []string, paramPrompt bool, paramForceDelete bool) (filesToDelete []string) {
+func deleteFiles(pathToProcess string, recursive bool, listFiles []string, paramPrompt bool, paramForceDelete bool, paramVerbose bool) (filesToDelete []string) {
 
 	pathToProcess = filepath.Clean(pathToProcess)
 	pathDir := filepath.Dir(pathToProcess)
 	baseName := filepath.Base(pathToProcess)
 
-	Info.Println("pathToProcess: " + pathToProcess)
-	Info.Println("pathDir: " + pathDir)
-	Info.Println("baseName: " + baseName)
+	if paramVerbose {
+		infoLog(fmt.Sprintf("Path to process: %s", pathToProcess))
+		infoLog(fmt.Sprintf("Path Dir: %s", pathDir))
+		infoLog(fmt.Sprintf("Base Name: %s", baseName))
+	}
 
 	listFiles = getFilesFromFolder(pathDir, baseName, recursive, listFiles)
 
@@ -190,11 +196,11 @@ func getFilesFromFolder(folderPath string, matching string, recursive bool, list
 		if chkMatching {
 			if k.IsDir() {
 				if recursive {
-					Info.Println("Folder: " + tmpFilePath)
+					infoLog(fmt.Sprintf("Folder: %s", tmpFilePath))
 					listFiles = getFilesFromFolder(tmpFilePath, "*", recursive, listFiles)
 				}
 			} else {
-				Info.Println("File: " + tmpFilePath)
+				infoLog(fmt.Sprintf("File: %s", tmpFilePath))
 				listFiles = append(listFiles, tmpFilePath)
 			}
 		}
@@ -227,7 +233,7 @@ func moveFilesFromRecycle(infoDeletedFile []InfoDeletedFile) {
 	for _, v := range infoDeletedFile {
 		if v.toProcess {
 			//RESTORE
-			Info.Printf("Recovered file: %s", filepath.Join(v.pathFile, v.name))
+			infoLog(fmt.Sprintf("Recovered file: %s", filepath.Join(v.pathFile, v.name)))
 			err := os.Rename(filepath.Join(RECYCLED_FOLDER, v.uuid.String()+"_"+v.name), filepath.Join(v.pathFile, v.name))
 			if err != nil {
 				errLog(err, debug.Stack())
@@ -239,7 +245,7 @@ func moveFilesFromRecycle(infoDeletedFile []InfoDeletedFile) {
 func moveFilesToRecycle(infoDeletedFile []InfoDeletedFile, paramForceDelete bool) {
 	for _, v := range infoDeletedFile {
 		if v.toProcess {
-			Info.Printf("Deleted file: %s", filepath.Join(v.pathFile, v.name))
+			infoLog(fmt.Sprintf("Deleted file: %s", filepath.Join(v.pathFile, v.name)))
 			if paramForceDelete {
 				err := os.Remove(filepath.Join(v.pathFile, v.name))
 				if err != nil {
@@ -262,7 +268,7 @@ func getListDeletedFiles(filter string, paramPrompt bool) (resultInfoDeletedFile
 	for k, v := range infoDeletedFile {
 		if b, err := filepath.Match(filter, v.name); b && errLog(err, debug.Stack()) {
 			//if strings.Contains(v.name, filter) {
-			Info.Printf("%d: %s  %s  %s", k, v.uuid.String()[:8], v.pathFile, v.name)
+			infoLog(fmt.Sprintf("%d: %s  %s  %s", k, v.uuid.String()[:8], v.pathFile, v.name))
 			if !paramPrompt || askForConfirmation(v.name, true) {
 				infoDeletedFile[k].toProcess = true
 			} else {
@@ -272,7 +278,7 @@ func getListDeletedFiles(filter string, paramPrompt bool) (resultInfoDeletedFile
 		}
 		if b, err := filepath.Match(filter, v.pathFile); b && errLog(err, debug.Stack()) {
 			//if strings.Contains(v.pathFile, filter) {
-			Info.Printf("%d: %s  %s  %s", k, v.uuid.String()[:8], v.pathFile, v.name)
+			infoLog(fmt.Sprintf("%d: %s  %s  %s", k, v.uuid.String()[:8], v.pathFile, v.name))
 			if !paramPrompt || askForConfirmation(v.name, true) {
 				infoDeletedFile[k].toProcess = true
 			} else {
@@ -282,7 +288,7 @@ func getListDeletedFiles(filter string, paramPrompt bool) (resultInfoDeletedFile
 		}
 		//if b, err := filepath.Match(filter, v.uuid.String()); b && errLog(err, debug.Stack()) {
 		if strings.Contains(v.uuid.String(), filter) {
-			Info.Printf("%d: %s  %s  %s", k, v.uuid.String()[:8], v.pathFile, v.name)
+			infoLog(fmt.Sprintf("%d: %s  %s  %s", k, v.uuid.String()[:8], v.pathFile, v.name))
 			if !paramPrompt || askForConfirmation(v.name, true) {
 				infoDeletedFile[k].toProcess = true
 			} else {

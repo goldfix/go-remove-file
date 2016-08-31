@@ -26,7 +26,7 @@ package main
 
 import (
 	"fmt"
-	"io"
+
 	"log"
 	"os"
 	"os/user"
@@ -35,20 +35,18 @@ import (
 	"strings"
 )
 
-func initLog(traceHandle io.Writer, infoHandle io.Writer, warningHandle io.Writer, errorHandle io.Writer) {
-	fileLog, err := os.OpenFile("file.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalln("Failed to open log file:", err)
+func initLog(logFile bool) {
+	if logFile {
+		fileLog, err := os.OpenFile("file.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatalln("Failed to open log file:", err)
+		}
+		InfoCmd = log.New(fileLog, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
+		ErrorFile = log.New(fileLog, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 	}
-	traceHandle = io.MultiWriter(traceHandle, fileLog)
-	infoHandle = io.MultiWriter(fileLog, infoHandle)
-	warningHandle = io.MultiWriter(fileLog, warningHandle)
-	errorHandle = io.MultiWriter(fileLog, errorHandle)
 
-	Trace = log.New(traceHandle, "TRACE: ", log.Ldate|log.Ltime|log.Lshortfile)
-	Info = log.New(infoHandle, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	Warning = log.New(warningHandle, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
-	Error = log.New(errorHandle, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	InfoFile = log.New(os.Stdout, "", 0)
+	ErrorCmd = log.New(os.Stdout, "Error: ", 0)
 }
 
 func initFolder() {
@@ -77,14 +75,11 @@ func initFolder() {
 }
 
 func emptyRecycle() {
-	if !askForConfirmation("", false) {
-		return
-	}
 	err := os.RemoveAll(RECYCLED_FOLDER)
 	if err != nil {
 		errLog(err, debug.Stack())
 	}
-	Info.Printf("Empty recycle folder completed.")
+	infoLog(fmt.Sprintf("Empty recycle folder completed."))
 	initFolder()
 }
 
@@ -94,9 +89,9 @@ func askForConfirmation(fileName string, isFile bool) bool {
 	var response string
 
 	if isFile {
-		Info.Printf("process file: '" + fileName + "'?")
+		infoLog(fmt.Sprintf("Process file: '" + fileName + "'?"))
 	} else {
-		Info.Printf("are you sure empty recycle folder?")
+		infoLog(fmt.Sprintf("Are you sure empty recycle folder?"))
 	}
 
 	_, err := fmt.Scan(&response)
@@ -110,9 +105,15 @@ func askForConfirmation(fileName string, isFile bool) bool {
 	} else if strings.ToLower(response) == "n" || strings.ToLower(response) == "no" {
 		return false
 	} else {
-		Info.Printf("Please type yes or no (or y or n) and then press enter:\n")
+		infoLog(fmt.Sprintf("Please type yes or no (or y or n) and then press enter:\n"))
 		return askForConfirmation(fileName, isFile)
 	}
+}
+
+func infoLog(mex string) bool {
+	InfoCmd.Printf(mex)
+	InfoFile.Printf(mex)
+	return true
 }
 
 func errLog(err error, stack []byte) bool {
@@ -123,9 +124,11 @@ func errLog(err error, stack []byte) bool {
 
 	////TODO: use 'signal' --> https://golang.org/pkg/os/signal/
 	if err.Error() == "EOF" {
-		Error.Println("operation has been interrupted")
+		ErrorCmd.Println("Pperation has been interrupted")
+		ErrorFile.Println("Operation has been interrupted")
 	} else {
-		Error.Println(err.Error(), string(stack))
+		ErrorCmd.Println(err.Error(), string(stack))
+		ErrorFile.Println(err.Error(), string(stack))
 	}
 	os.Exit(1)
 	return false
