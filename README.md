@@ -20,3 +20,23 @@ Usage of grm:
 
 #### Thanks to:
 * https://github.com/satori/go.uuid
+
+# Installation
+
+To install go-remove-file, you can download a [prebuilt binary](https://github.com/goldfix/go-remove-file/releases), or you can build it from source.
+
+### Prebuilt binaries
+
+All you need to install go-remove-file is one file, the binary itself.
+
+Download the binary from the [releases](https://github.com/goldfix/go-remove-file/releases) page.
+
+### Building from source
+
+If your operating system does not have binary, but does run Go, you can build from source.
+
+Make sure that you have Go version 1.6 or greater.
+
+```sh
+go get -u github.com/goldfix/go-remove-file/...
+```

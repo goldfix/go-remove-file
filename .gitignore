@@ -59,3 +59,4 @@ _testmain.go
 src/grm/cover.out
 
 src/grm/file.txt
+src/github.com/*
