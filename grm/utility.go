@@ -38,11 +38,12 @@ import (
 )
 
 func initLog(logFile string) {
+
 	InfoCmd = log.New(os.Stdout, "", 0)
 	ErrorCmd = log.New(os.Stdout, "Error: ", 0)
 
 	if logFile != "" {
-		logFile = logFile + "grm_" + time.Now().Format("20060102") + ".log"
+		logFile = filepath.Join(logFile, "grm_"+time.Now().Format("20060102")+".log")
 		fileLog, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, os.ModePerm)
 		if err != nil {
 			log.Fatalln("Failed to open log file:", err)
@@ -64,7 +65,7 @@ func initFolder() {
 	//check if exists folder of recycled
 	RECYCLED_FOLDER = filepath.Join(currentUser.HomeDir, ".grm")
 	if _, err := os.Stat(RECYCLED_FOLDER); os.IsNotExist(err) {
-		err = os.Mkdir(RECYCLED_FOLDER, os.ModeDir)
+		err = os.Mkdir(RECYCLED_FOLDER, os.ModePerm)
 		if err != nil {
 			errLog(err, debug.Stack())
 		}

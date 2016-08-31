@@ -32,6 +32,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/user"
 	"path/filepath"
 	"runtime/debug"
 	"strings"
@@ -48,9 +49,8 @@ type InfoDeletedFile struct {
 	toProcess bool
 }
 
-const VERSION string = "0.3"
+const VERSION string = "0.4"
 const SEPARATOR rune = '|'
-const PATH_LOG_FILE = "./"
 
 var (
 	InfoCmd         *log.Logger
@@ -62,7 +62,12 @@ var (
 )
 
 func main() {
-	initLog(PATH_LOG_FILE)
+	currentUser, err := user.Current()
+	if err != nil {
+		errLog(err, debug.Stack())
+	}
+	pathLogFile := currentUser.HomeDir
+	initLog(pathLogFile)
 	initFolder()
 
 	paramListRecycleFiles := flag.Bool("ls", false, "list files into recycle")
