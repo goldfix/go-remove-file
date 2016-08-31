@@ -1,0 +1,16 @@
+INFO: 2016/08/31 16:38:18 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:40:09 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:41:03 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:42:05 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:43:21 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:43:57 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:44:03 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:44:29 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:44:32 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:44:40 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:44:53 utility.go:73: Empty recycle folder completed.
+INFO: 2016/08/31 16:45:31 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:45:31 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:46:01 utility.go:84: Empty recycle folder completed.
+INFO: 2016/08/31 16:46:15 utility.go:73: Empty recycle folder completed.
+INFO: 2016/08/31 16:46:23 utility.go:73: Empty recycle folder completed.
