@@ -26,6 +26,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -34,4 +35,23 @@ func Test_initFolder(t *testing.T) {
 	initFolder()
 	os.RemoveAll(RECYCLED_FOLDER)
 	initFolder()
+}
+
+func Test_emptyRecycle(t *testing.T) {
+	initLog(ioutil.Discard, ioutil.Discard, ioutil.Discard, ioutil.Discard)
+	initFolder()
+
+	os.RemoveAll(RECYCLED_FOLDER)
+	emptyRecycle()
+
+	if _, err := os.Stat(RECYCLED_FOLDER); os.IsNotExist(err) {
+		t.Errorf("TestloadInfoDeletedFile: RECYCLED_FOLDER Not Exists")
+
+	} else {
+		if b, err := os.Stat(RECYCLED_FILEDB); os.IsNotExist(err) || b.Size() != 72 {
+			t.Errorf("TestloadInfoDeletedFile: RECYCLED_FILEDB Not Exists")
+		} else {
+			//continue
+		}
+	}
 }
