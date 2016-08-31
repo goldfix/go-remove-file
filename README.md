@@ -18,5 +18,5 @@ Usage of grm:
   -t 		destination folder to restore
 </code></pre>
 
-Thanks to:
+#### Thanks to:
 * https://github.com/satori/go.uuid
