@@ -36,6 +36,7 @@ import (
 )
 
 func Test_saveInfoDeletedFile(t *testing.T) {
+	initLog("")
 	initFolder()
 
 	var infoDeletedFile []InfoDeletedFile
@@ -71,7 +72,7 @@ func Test_saveInfoDeletedFile(t *testing.T) {
 func Test_loadInfoDeletedFile(t *testing.T) {
 	initFolder()
 
-	f, err := os.OpenFile(RECYCLED_FILEDB, os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	f, err := os.OpenFile(RECYCLED_FILEDB, os.O_CREATE|os.O_TRUNC|os.O_RDWR, os.ModePerm)
 	if err != nil {
 		t.Errorf("TestloadInfoDeletedFile: %s - %s", err.Error(), string(debug.Stack()))
 	}

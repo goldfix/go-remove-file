@@ -45,7 +45,7 @@ func saveInfoDeletedFile(infoDeletedFile []InfoDeletedFile, initFile bool) {
 		}
 	}
 
-	f, err := os.OpenFile(RECYCLED_FILEDB, os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	f, err := os.OpenFile(RECYCLED_FILEDB, os.O_CREATE|os.O_TRUNC|os.O_RDWR, os.ModePerm)
 	if err != nil {
 		errLog(err, debug.Stack())
 	}

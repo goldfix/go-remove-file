@@ -31,7 +31,9 @@ import (
 )
 
 func Test_initFolder(t *testing.T) {
+	initLog("")
 	initFolder()
+
 	os.RemoveAll(RECYCLED_FOLDER)
 	initFolder()
 }
