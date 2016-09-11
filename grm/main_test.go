@@ -29,6 +29,6 @@ import (
 	"testing"
 )
 
-func _Test_Init_main(t *testing.T) {
+func xTestInitmain(t *testing.T) {
 	t.Logf("Init 'main': %s", "OK")
 }

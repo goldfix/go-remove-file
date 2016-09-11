@@ -1,0 +1,5 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "go.gopath": "c:/tmp/go-remove-file/",
+    "files.autoSave": "off",
+}

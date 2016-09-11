@@ -63,13 +63,13 @@ func initFolder() {
 	}
 
 	//check if exists folder of recycled
-	RECYCLED_FOLDER = filepath.Join(currentUser.HomeDir, ".grm")
-	if _, err := os.Stat(RECYCLED_FOLDER); os.IsNotExist(err) {
-		err = os.Mkdir(RECYCLED_FOLDER, os.ModePerm)
+	RecycledFolder = filepath.Join(currentUser.HomeDir, ".grm")
+	if _, err := os.Stat(RecycledFolder); os.IsNotExist(err) {
+		err = os.Mkdir(RecycledFolder, os.ModePerm)
 		if err != nil {
 			errLog(err, debug.Stack())
 		}
-		f, err := os.OpenFile(filepath.Join(RECYCLED_FOLDER, "_DO_NOT_REMOVE_"), os.O_CREATE, os.ModePerm)
+		f, err := os.OpenFile(filepath.Join(RecycledFolder, "_DO_NOT_REMOVE_"), os.O_CREATE, os.ModePerm)
 		if err != nil {
 			errLog(err, debug.Stack())
 		}
@@ -77,12 +77,12 @@ func initFolder() {
 	}
 
 	//check if exists file of list deleted files and init
-	RECYCLED_FILEDB = filepath.Join(RECYCLED_FOLDER, ".grm.db")
+	RecycledFolder = filepath.Join(RecycledFolder, ".grm.db")
 	saveInfoDeletedFile(nil, true)
 }
 
 func emptyRecycle() {
-	err := os.RemoveAll(RECYCLED_FOLDER)
+	err := os.RemoveAll(RecycledFolder)
 	if err != nil {
 		errLog(err, debug.Stack())
 	}
