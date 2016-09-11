@@ -37,8 +37,6 @@ import (
 
 func saveInfoDeletedFile(infoDeletedFile []InfoDeletedFile, initFile bool) {
 
-	infoLog(RecycledFiledb)
-
 	if initFile {
 		if _, err := os.Stat(RecycledFiledb); os.IsNotExist(err) {
 			//continue
