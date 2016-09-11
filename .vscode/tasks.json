@@ -5,7 +5,7 @@
     "showOutput": "always",
     "options": {
         "env": {
-            "GOPATH": "c:/tmp/go-remove-file/"
+            "GOPATH": "c:/Progetti/my_project_github/go-remove-file/"
         }
     },
     "tasks": [
