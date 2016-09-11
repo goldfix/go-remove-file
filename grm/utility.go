@@ -77,7 +77,7 @@ func initFolder() {
 	}
 
 	//check if exists file of list deleted files and init
-	RecycledFolder = filepath.Join(RecycledFolder, ".grm.db")
+	RecycledFiledb = filepath.Join(RecycledFolder, ".grm.db")
 	saveInfoDeletedFile(nil, true)
 }
 

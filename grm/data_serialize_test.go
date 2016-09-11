@@ -53,7 +53,7 @@ func Test_saveInfoDeletedFile(t *testing.T) {
 
 	saveInfoDeletedFile(infoDeletedFile, false)
 
-	f, err := os.OpenFile(RECYCLED_FILEDB, os.O_RDONLY, os.ModePerm)
+	f, err := os.OpenFile(RecycledFiledb, os.O_RDONLY, os.ModePerm)
 	if err != nil {
 		t.Errorf("Test_saveInfoDeletedFile: %s - %s", err.Error(), string(debug.Stack()))
 	}
@@ -72,7 +72,7 @@ func Test_saveInfoDeletedFile(t *testing.T) {
 func Test_loadInfoDeletedFile(t *testing.T) {
 	initFolder()
 
-	f, err := os.OpenFile(RECYCLED_FILEDB, os.O_CREATE|os.O_TRUNC|os.O_RDWR, os.ModePerm)
+	f, err := os.OpenFile(RecycledFiledb, os.O_CREATE|os.O_TRUNC|os.O_RDWR, os.ModePerm)
 	if err != nil {
 		t.Errorf("TestloadInfoDeletedFile: %s - %s", err.Error(), string(debug.Stack()))
 	}
