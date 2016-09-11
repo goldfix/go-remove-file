@@ -31,8 +31,10 @@ import (
 )
 
 func Test_initFolder(t *testing.T) {
+	initLog("")
 	initFolder()
-	os.RemoveAll(RECYCLED_FOLDER)
+
+	os.RemoveAll(RecycledFolder)
 	initFolder()
 }
 
@@ -40,14 +42,14 @@ func Test_emptyRecycle(t *testing.T) {
 	initLog("")
 	initFolder()
 
-	os.RemoveAll(RECYCLED_FOLDER)
+	os.RemoveAll(RecycledFolder)
 	emptyRecycle()
 
-	if _, err := os.Stat(RECYCLED_FOLDER); os.IsNotExist(err) {
-		t.Errorf("TestloadInfoDeletedFile: RECYCLED_FOLDER Not Exists")
+	if _, err := os.Stat(RecycledFolder); os.IsNotExist(err) {
+		t.Errorf("TestloadInfoDeletedFile: RecycledFolder Not Exists")
 
 	} else {
-		if b, err := os.Stat(RECYCLED_FILEDB); os.IsNotExist(err) || b.Size() != 72 {
+		if b, err := os.Stat(RecycledFiledb); os.IsNotExist(err) || b.Size() != 72 {
 			t.Errorf("TestloadInfoDeletedFile: RECYCLED_FILEDB Not Exists")
 		} else {
 			//continue

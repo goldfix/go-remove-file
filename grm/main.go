@@ -32,6 +32,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/user"
 	"path/filepath"
 	"runtime/debug"
 	"strings"
@@ -40,6 +41,7 @@ import (
 	guuid "github.com/satori/go.uuid"
 )
 
+//InfoDeletedFile Struct Internal
 type InfoDeletedFile struct {
 	name      string
 	date      time.Time
@@ -48,21 +50,29 @@ type InfoDeletedFile struct {
 	toProcess bool
 }
 
-const VERSION string = "0.3"
-const SEPARATOR rune = '|'
-const PATH_LOG_FILE = "./"
+//VERSION of tool
+const VERSION string = "0.4"
 
+//SEPARATOR to use in storage file
+const SEPARATOR rune = '|'
+
+//Internal variables
 var (
-	InfoCmd         *log.Logger
-	InfoFile        *log.Logger
-	ErrorCmd        *log.Logger
-	ErrorFile       *log.Logger
-	RECYCLED_FILEDB string
-	RECYCLED_FOLDER string
+	InfoCmd        *log.Logger
+	InfoFile       *log.Logger
+	ErrorCmd       *log.Logger
+	ErrorFile      *log.Logger
+	RecycledFiledb string
+	RecycledFolder string
 )
 
 func main() {
-	initLog(PATH_LOG_FILE)
+	currentUser, err := user.Current()
+	if err != nil {
+		errLog(err, debug.Stack())
+	}
+	pathLogFile := currentUser.HomeDir
+	initLog(pathLogFile)
 	initFolder()
 
 	paramListRecycleFiles := flag.Bool("ls", false, "list files into recycle")
@@ -117,11 +127,11 @@ func main() {
 		infoLog(fmt.Sprintf("Flag Force: %t", *paramForce))
 		infoLog(fmt.Sprintf("Flag Recursive: %t", *paramRecursive))
 		infoLog(fmt.Sprintf("Flag Delete Files: %t", *paramForceDelete))
-		infoLog(fmt.Sprintf("Flag Path destination folder: %t", *paramPathToRestore))
+		infoLog(fmt.Sprintf("Flag Path destination folder: %s", *paramPathToRestore))
 
 		infoLog(fmt.Sprintf("Flag Version: %t", *paramVersion))
-		infoLog(fmt.Sprintf("Recycle Folder: %s", RECYCLED_FOLDER))
-		infoLog(fmt.Sprintf("Recycle FileDb: %s", RECYCLED_FILEDB))
+		infoLog(fmt.Sprintf("Recycle Folder: %s", RecycledFolder))
+		infoLog(fmt.Sprintf("Recycle FileDb: %s", RecycledFiledb))
 	}
 
 	if *paramListRecycleFiles {
@@ -186,7 +196,8 @@ func recoverFiles(paramRecoverFiles string, paramPrompt bool, paramPathToRestore
 func getFilesFromFolder(folderPath string, matching string, recursive bool, listFiles []string) (resultListFiles []string) {
 
 	if s, err := os.Stat(folderPath); os.IsNotExist(err) || !s.IsDir() {
-		err = errors.New(fmt.Sprintf("Folder is invalid or not exists (%s).", folderPath))
+
+		err = fmt.Errorf("Folder is invalid or not exists (%s).", folderPath)
 		errLog(err, nil)
 	}
 
@@ -250,7 +261,7 @@ func moveFilesFromRecycle(infoDeletedFile []InfoDeletedFile, paramPathToRestore 
 			if err != nil {
 				errLog(err, debug.Stack())
 			}
-			err = os.Rename(filepath.Join(RECYCLED_FOLDER, v.uuid.String()+"_"+v.name), filepath.Join(destFolder, v.name))
+			err = os.Rename(filepath.Join(RecycledFolder, v.uuid.String()+"_"+v.name), filepath.Join(destFolder, v.name))
 			if err != nil {
 				errLog(err, debug.Stack())
 			}
@@ -268,7 +279,7 @@ func moveFilesToRecycle(infoDeletedFile []InfoDeletedFile, paramForceDelete bool
 					errLog(err, debug.Stack())
 				}
 			} else {
-				err := os.Rename(filepath.Join(v.pathFile, v.name), filepath.Join(RECYCLED_FOLDER, v.uuid.String()+"_"+v.name))
+				err := os.Rename(filepath.Join(v.pathFile, v.name), filepath.Join(RecycledFolder, v.uuid.String()+"_"+v.name))
 				if err != nil {
 					errLog(err, debug.Stack())
 				}

@@ -1,7 +1,7 @@
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/goldfix/go-remove-file/blob/master/LICENSE)
+
 # go-remove-file
 Possible substitute at 'rm' command. Similar functions plus recovery and trash functions.
-
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/goldfix/go-remove-file/blob/master/LICENSE)
 
 <pre><code>
 Usage of grm:

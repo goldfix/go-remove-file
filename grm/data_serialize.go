@@ -38,14 +38,14 @@ import (
 func saveInfoDeletedFile(infoDeletedFile []InfoDeletedFile, initFile bool) {
 
 	if initFile {
-		if _, err := os.Stat(RECYCLED_FILEDB); os.IsNotExist(err) {
+		if _, err := os.Stat(RecycledFiledb); os.IsNotExist(err) {
 			//continue
 		} else {
 			return
 		}
 	}
 
-	f, err := os.OpenFile(RECYCLED_FILEDB, os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	f, err := os.OpenFile(RecycledFiledb, os.O_CREATE|os.O_TRUNC|os.O_RDWR, os.ModePerm)
 	if err != nil {
 		errLog(err, debug.Stack())
 	}
@@ -67,7 +67,7 @@ func saveInfoDeletedFile(infoDeletedFile []InfoDeletedFile, initFile bool) {
 }
 
 func loadInfoDeletedFile() (resultInfoDeletedFile []InfoDeletedFile) {
-	f, err := os.OpenFile(RECYCLED_FILEDB, os.O_RDONLY, os.ModePerm)
+	f, err := os.OpenFile(RecycledFiledb, os.O_RDONLY, os.ModePerm)
 	if err != nil {
 		errLog(err, debug.Stack())
 	}

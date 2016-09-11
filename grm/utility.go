@@ -38,12 +38,13 @@ import (
 )
 
 func initLog(logFile string) {
+
 	InfoCmd = log.New(os.Stdout, "", 0)
 	ErrorCmd = log.New(os.Stdout, "Error: ", 0)
 
 	if logFile != "" {
-		logFile = logFile + "grm_" + time.Now().Format("20060102") + ".log"
-		fileLog, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		logFile = filepath.Join(logFile, "grm_"+time.Now().Format("20060102")+".log")
+		fileLog, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, os.ModePerm)
 		if err != nil {
 			log.Fatalln("Failed to open log file:", err)
 		}
@@ -62,13 +63,13 @@ func initFolder() {
 	}
 
 	//check if exists folder of recycled
-	RECYCLED_FOLDER = filepath.Join(currentUser.HomeDir, ".grm")
-	if _, err := os.Stat(RECYCLED_FOLDER); os.IsNotExist(err) {
-		err = os.Mkdir(RECYCLED_FOLDER, os.ModeDir)
+	RecycledFolder = filepath.Join(currentUser.HomeDir, ".grm")
+	if _, err := os.Stat(RecycledFolder); os.IsNotExist(err) {
+		err = os.Mkdir(RecycledFolder, os.ModePerm)
 		if err != nil {
 			errLog(err, debug.Stack())
 		}
-		f, err := os.OpenFile(filepath.Join(RECYCLED_FOLDER, "_DO_NOT_REMOVE_"), os.O_CREATE, os.ModePerm)
+		f, err := os.OpenFile(filepath.Join(RecycledFolder, "_DO_NOT_REMOVE_"), os.O_CREATE, os.ModePerm)
 		if err != nil {
 			errLog(err, debug.Stack())
 		}
@@ -76,12 +77,12 @@ func initFolder() {
 	}
 
 	//check if exists file of list deleted files and init
-	RECYCLED_FILEDB = filepath.Join(RECYCLED_FOLDER, ".grm.db")
+	RecycledFiledb = filepath.Join(RecycledFolder, ".grm.db")
 	saveInfoDeletedFile(nil, true)
 }
 
 func emptyRecycle() {
-	err := os.RemoveAll(RECYCLED_FOLDER)
+	err := os.RemoveAll(RecycledFolder)
 	if err != nil {
 		errLog(err, debug.Stack())
 	}
