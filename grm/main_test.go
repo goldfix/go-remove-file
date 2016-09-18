@@ -25,10 +25,8 @@
 // grm project main.go
 package main
 
-import (
-	"testing"
-)
+import "testing"
 
-func xTestInitmain(t *testing.T) {
-	t.Logf("Init 'main': %s", "OK")
+func Test_getListDeletedFiles(t *testing.T) {
+
 }
