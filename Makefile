@@ -41,6 +41,8 @@ runtime:
 	# mv runtime.go grm
 
 test:
+	rm -rf /tmp/folder_test/
+	unzip ./folder_test/folder_test.zip -d /tmp/
 	go get -d ./cmd/grm
 	go test ./cmd/grm
 
