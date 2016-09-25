@@ -51,7 +51,7 @@ type InfoDeletedFile struct {
 }
 
 //VERSION of tool
-const VERSION string = "0.5.1"
+const VERSION string = "0.5.2"
 
 //SEPARATOR to use in storage file
 const SEPARATOR rune = '|'
