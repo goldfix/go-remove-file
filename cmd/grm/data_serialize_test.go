@@ -65,8 +65,8 @@ func Test_saveInfoDeletedFile(t *testing.T) {
 		t.Errorf("Test_saveInfoDeletedFile: %s - %s", err.Error(), string(debug.Stack()))
 	}
 
-	if stat.Size() != 866 {
-		t.Errorf("Test_saveInfoDeletedFile: stat.Size() != 866")
+	if stat.Size() != 868 {
+		t.Errorf("Test_saveInfoDeletedFile: stat.Size() != 868 (%d)", stat.Size())
 	}
 }
 
@@ -79,7 +79,7 @@ func Test_loadInfoDeletedFile(t *testing.T) {
 	}
 	defer f.Close()
 	var s string
-	s = `20160830_162703|//* Data File 'grm' tool. Please not remove. *//|0.1|nd\n
+	s = `20160830_162703|//* Data File 'grm' tool. Please not remove. *//|0.1.1|nd\n
 20160830_162703|file_1 - Copy (2).txt|c:\tmp\folder_test|9980aa96-ac59-4342-8b36-e815c714c4a3
 20160830_162703|file_1 - Copy (3).txt|c:\tmp\folder_test|1ed23664-39aa-44bb-bda7-85fec56242bd
 20160830_162703|file_1 - Copy (4).txt|c:\tmp\folder_test|95f2c6ea-4cba-4bc0-bc8c-ad7017f888ea
