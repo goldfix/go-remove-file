@@ -26,9 +26,31 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
-func xTestInitmain(t *testing.T) {
-	t.Logf("Init 'main': %s", "OK")
+func Test_getListDeletedFiles(t *testing.T) {
+	initLog("")
+	initFolder()
+
+	result := getListDeletedFiles("/tmp/folder_test/*", false)
+	fmt.Println(result)
+}
+
+func Test_getFilesFromFolder(t *testing.T) {
+	initLog("")
+	initFolder()
+	var filesToDelete []string
+	result := getFilesFromFolder("/tmp/folder_test/", "*", false, filesToDelete)
+
+	if len(result) != 10 {
+		t.Errorf("TestgetFilesFromFolder: len(result) != 10")
+	}
+
+	result = getFilesFromFolder("/tmp/folder_test/", "*", true, filesToDelete)
+
+	if len(result) != 50 {
+		t.Errorf("TestgetFilesFromFolder: len(result) != 50 (%d)", len(result))
+	}
 }

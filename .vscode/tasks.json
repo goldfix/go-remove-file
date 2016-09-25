@@ -5,10 +5,18 @@
     "showOutput": "always",
     "options": {
         "env": {
-            "GOPATH":"c:/tmp/go-remove-file/"
-        }        
+            "GOPATH": "/home/goldfix/projects/"
+        }
     },
     "tasks": [
+        {
+            "taskName": "build-release",
+            "args": [
+                "-v",
+                "./..."
+            ],
+            "isBuildCommand": true
+        },
         {
             "taskName": "install",
             "args": [

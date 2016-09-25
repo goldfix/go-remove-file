@@ -46,11 +46,11 @@ func Test_emptyRecycle(t *testing.T) {
 	emptyRecycle()
 
 	if _, err := os.Stat(RecycledFolder); os.IsNotExist(err) {
-		t.Errorf("TestloadInfoDeletedFile: RecycledFolder Not Exists")
+		t.Errorf("TestemptyRecycle: RecycledFolder Not Exists")
 
 	} else {
 		if b, err := os.Stat(RecycledFiledb); os.IsNotExist(err) || b.Size() != 72 {
-			t.Errorf("TestloadInfoDeletedFile: RECYCLED_FILEDB Not Exists")
+			t.Errorf("TestemptyRecycle: RECYCLED_FILEDB Not Exists")
 		} else {
 			//continue
 		}

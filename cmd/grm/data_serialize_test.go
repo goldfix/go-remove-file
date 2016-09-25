@@ -36,6 +36,7 @@ import (
 )
 
 func Test_saveInfoDeletedFile(t *testing.T) {
+
 	initLog("")
 	initFolder()
 
