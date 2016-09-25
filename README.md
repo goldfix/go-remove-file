@@ -40,3 +40,5 @@ Make sure that you have Go version 1.6 or greater.
 ```sh
 go get -u github.com/goldfix/go-remove-file/...
 ```
+
+v05
