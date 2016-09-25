@@ -1,4 +1,5 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/goldfix/go-remove-file/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/goldfix/go-remove-file.svg?branch=master)](https://travis-ci.org/goldfix/go-remove-file)
 
 # go-remove-file
 Possible substitute at 'rm' command. Similar functions plus recovery and trash functions.
@@ -40,5 +41,3 @@ Make sure that you have Go version 1.6 or greater.
 ```sh
 go get -u github.com/goldfix/go-remove-file/...
 ```
-
-v05
