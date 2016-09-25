@@ -56,6 +56,5 @@ _testmain.go
 *.test
 *.prof
 
-github.com/satori/*
-grm/cover.out
-grm/file.txt
+binaries/*
+
