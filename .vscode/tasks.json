@@ -10,7 +10,7 @@
     },
     "tasks": [
         {
-            "taskName": "build-release",
+            "taskName": "clean",
             "args": [
                 "-v",
                 "./..."
@@ -26,6 +26,14 @@
             "isBuildCommand": true
         },
         {
+            "taskName": "test",
+            "args": [
+                "-v",
+                "./..."
+            ],
+            "isTestCommand": true
+        },
+                {
             "taskName": "test",
             "args": [
                 "-v",
