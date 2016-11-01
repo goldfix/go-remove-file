@@ -12,7 +12,9 @@
         {
             "taskName": "clean",
             "args": [
-                "-v",
+                "-i",
+                "-r",
+                "-x",
                 "./..."
             ],
             "isBuildCommand": true
@@ -21,6 +23,7 @@
             "taskName": "install",
             "args": [
                 "-v",
+                "-x",
                 "./..."
             ],
             "isBuildCommand": true
@@ -33,10 +36,11 @@
             ],
             "isTestCommand": true
         },
-                {
-            "taskName": "test",
+        {
+            "taskName": "get",
             "args": [
-                "-v",
+                "-f",
+                "-u",
                 "./..."
             ],
             "isTestCommand": true
