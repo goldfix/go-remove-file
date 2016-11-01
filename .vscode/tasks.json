@@ -2,6 +2,7 @@
     "version": "0.1.0",
     "command": "go",
     "isShellCommand": true,
+    "echoCommand": true,
     "showOutput": "always",
     "options": {
         "env": {
@@ -16,8 +17,7 @@
                 "-r",
                 "-x",
                 "./..."
-            ],
-            "isBuildCommand": true
+            ]
         },
         {
             "taskName": "install",
@@ -39,11 +39,8 @@
         {
             "taskName": "get",
             "args": [
-                "-f",
-                "-u",
                 "./..."
-            ],
-            "isTestCommand": true
+            ]
         }
     ]
 }
