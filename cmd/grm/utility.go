@@ -40,7 +40,7 @@ import (
 func initLog(logFile string) {
 
 	InfoCmd = log.New(os.Stdout, "", 0)
-	ErrorCmd = log.New(os.Stdout, "Error: ", 0)
+	ErrorCmd = log.New(os.Stderr, "Error: ", 0)
 
 	if logFile != "" {
 		logFile = filepath.Join(logFile, "grm_"+time.Now().Format("20060102")+".log")
@@ -131,7 +131,7 @@ func errLog(err error, stack []byte) bool {
 
 	////TODO: use 'signal' --> https://golang.org/pkg/os/signal/
 	if err.Error() == "EOF" {
-		ErrorCmd.Println("Pperation has been interrupted")
+		ErrorCmd.Println("Operation has been interrupted")
 		ErrorFile.Println("Operation has been interrupted")
 	} else {
 		ErrorCmd.Println(err.Error(), string(stack))
